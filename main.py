@@ -1,5 +1,5 @@
 import smartcar
-from flask import Flask, redirect, request, jsonify
+from flask import Flask, redirect, request, jsonify, url_for
 from flask_cors import CORS
 
 import os
@@ -21,6 +21,11 @@ client = smartcar.AuthClient(
 )
 
 
+@app.route('/')
+def main_page():
+    return redirect(url_for("login"))
+
+
 @app.route('/login', methods=['GET'])
 def login():
     auth_url = client.get_auth_url()
@@ -36,7 +41,8 @@ def exchange():
     # in a production app you'll want to store this in some kind of
     # persistent storage
     access = client.exchange_code(code)
-    return '', 200
+    print(access)
+    return redirect(url_for("vehicle"), code=200)
 
 
 @app.route('/vehicle', methods=['GET'])
@@ -58,7 +64,8 @@ def vehicle():
     except TypeError:
         pass
 
-    return jsonify(info)
+    retval = "<html><head></head></body><p>Hello, world!</p></body></html>"
+    return retval
 
 
 @app.route('/unlock', methods=['GET'])
