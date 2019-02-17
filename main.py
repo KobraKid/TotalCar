@@ -1,8 +1,10 @@
+import os
+
 import smartcar
 from flask import Flask, redirect, request, jsonify, url_for
 from flask_cors import CORS
 
-import os
+import strings
 
 app = Flask(__name__)
 CORS(app)
@@ -11,13 +13,14 @@ CORS(app)
 access = None
 # storing this url for use to set permissions
 auth = "https://connect.smartcar.com/oauth/authorize?response_type=code&client_id=69b1e512-8797-40a3-ac74-27c9f26cf75a&scope=read_vehicle_info+control_security+control_security:unlock+read_odometer+control_security:lock&redirect_uri=http://localhost:8000/vehicle&state=0facda3319&mode=live"
+fe = 'https://www.fueleconomy.gov/ws/rest/vehicle/menu/model?year=2019&make=TESLA&model=Model%203'
 
 client = smartcar.AuthClient(
     client_id="69b1e512-8797-40a3-ac74-27c9f26cf75a",
     client_secret="6a29fc0d-3263-4f3e-ba7b-2c9acaa8e260",
     redirect_uri="http://localhost:8000/exchange",
     scope=['read_vehicle_info', 'read_odometer', 'control_security', 'control_security:unlock', 'control_security:lock'],
-    test_mode=False
+    test_mode=True
 )
 
 
@@ -53,19 +56,19 @@ def vehicle():
     vehicle_ids = smartcar.get_vehicle_ids(
         access['access_token'])['vehicles']
 
-    # instantiate the first vehicle in the vehicle id list
-    vehicle = smartcar.Vehicle(vehicle_ids[0], access['access_token'])
-    info = ''
-    try:
-        info = vehicle.info()
-        print(info)
-        print("Permissions " + str(vehicle.permissions()))
-        print("Odometer " + str(vehicle.odometer()))
-    except TypeError:
-        pass
-
-    retval = "<html><head></head></body><p>Hello, world!</p></body></html>"
-    return retval
+    vehicle_summary = strings.header
+    for vid in vehicle_ids:
+        # instantiate the first vehicle in the vehicle id list
+        vehicle = smartcar.Vehicle(vid, access['access_token'])
+        info = ''
+        try:
+            info = vehicle.info()
+            print("Odometer " + str(vehicle.odometer()))
+        except TypeError:
+            pass
+        vehicle_summary += strings.card % (info['make'], info['model'], info['make'], info['model'], info['year'], 63, 1284, 918)
+    vehicle_summary += strings.footer
+    return vehicle_summary
 
 
 @app.route('/unlock', methods=['GET'])
