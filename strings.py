@@ -23,8 +23,37 @@ card = """
     <img src="https://amp.businessinsider.com/images/5b97c8db5c5e5223008b606a-1334-1001.jpg" class="card-img-top" alt="%s %s">
     <div class="card-body">
         <h5 class="card-title">%s %s (%s)</h5>
-        <p class="card-text">Last fill-up: %s miles ago<br>Last oil change: %s miles ago<br>Last tire rotation: %s miles ago</p>
-        <a href="#" class="btn btn-primary">Details</a>
+        <i class="card-text" style="color: gray">%s miles</i>
     </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Last fill-up: %s miles ago</li>
+        <li class="list-group-item">Last oil change: %s miles ago</li>
+        <li class="list-group-item">Last tire rotation: %s miles ago</li>
+    </ul>
+    <div class="card-body">
+        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="%s">Details</a>
+    </div>
+</div>
+"""
+
+details_modal = """
+<div class="modal fade" id="%s" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
 """

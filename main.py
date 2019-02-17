@@ -1,3 +1,4 @@
+import math
 import os
 
 import smartcar
@@ -61,12 +62,21 @@ def vehicle():
         # instantiate the first vehicle in the vehicle id list
         vehicle = smartcar.Vehicle(vid, access['access_token'])
         info = ''
+        odometer = ''
         try:
             info = vehicle.info()
-            print("Odometer " + str(vehicle.odometer()))
+            odometer = vehicle.odometer()
         except TypeError:
-            pass
-        vehicle_summary += strings.card % (info['make'], info['model'], info['make'], info['model'], info['year'], 63, 1284, 918)
+            print("Failed to get info from vehicle %s" % vid)
+            continue
+        compound_name = info['make'] + info['model'] + str(info['year'])
+        vehicle_summary += strings.card % (
+            info['make'], info['model'],
+            info['make'], info['model'], info['year'],
+            math.floor(odometer['data']['distance'] * 0.000621371),
+            63, 1284, 918,
+            '#' + compound_name)
+        vehicle_summary += strings.details_modal % (compound_name)
     vehicle_summary += strings.footer
     return vehicle_summary
 
