@@ -22,7 +22,7 @@ def create_connection(db_file):
     return None
 
 
-# In[14]:
+# In[38]:
 
 
 def create_total_car(conn):
@@ -35,7 +35,18 @@ def create_total_car(conn):
     #for row in rows:
         #print(row)
 
-def select_all_tasks(conn):
+def find_user(conn,uid):
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM totalcar where userid='%s'"%uid)
+ 
+    rows = cur.fetchall()
+    return rows
+
+def insert_user(conn,uid,vid):
+    cur = conn.cursor()
+    cur.execute("insert into totalcar values('%s','%s',%i,%i,%i)"%(uid,vid,0,0,0))
+    
+def select_all_user(conn):
     """
     Query all rows in the tasks table
     :param conn: the Connection object
@@ -48,16 +59,34 @@ def select_all_tasks(conn):
  
     for row in rows:
         print(row)
+
+def update_od_fuel(con,userid,vehicleid, odometer, threshold):
+    #filled fueltank at odometer
+    cur = conn.cursor()
+    cur.execute("UPDATE totalcar set od_fuel=%i where userid='%s' and vehicalid='%s'"%(odometer+threshold,userid,vehicleid))
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
+
+""""def update_od_oil(con,userid,vehicleid, odometer, threshold):
+    cur = conn.cursor()
+    cur.execute("UPDATE totalcar set od_oil=%i where userid=%s and vehicalid=%s"%(odometer+threshold,userid,vehicleid))
+    
+def update_od_tire(con,userid,vehicleid, odometer, threshold):
+    cur = conn.cursor()
+    cur.execute("UPDATE totalcar set od_tyre=%i where userid=%s and vehicalid=%s"%(odometer+threshold,userid,vehicleid))
         
 def main():
     database = "/Users/admin/Desktop/Spring 2019/MyProjectIdea/pythonsqlite.db"
  
     # create a database connection
     conn = create_connection(database)
-    with conn:
-        create_total_car(conn)
-        print("1. Query task by priority:")
-        select_all_tasks(conn)
+    return conn
+        #create_total_car(conn)
+        #select_all_tasks(conn)"""
 if __name__ == '__main__':
-    main()
+    conn=main()
+    #insert_user(conn,'xyz','abc')
+    update_od_fuel(conn,'abc','xyz',100,100)
+    #select_all_user(conn)
 
